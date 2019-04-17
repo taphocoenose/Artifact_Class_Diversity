@@ -1,7 +1,8 @@
 # Artifact Class Diversity
-This project contains R (www.r-project.org) and Stan (www.mc-stan.org) scripts that estimate artifact class diversity in multiple geographic regions.<br><br>
+This project contains R (www.r-project.org) and Stan (www.mc-stan.org) scripts that estimate artifact class diversity in multiple geographic regions.<br>
 
-<body style="background-color:powderblue;">
+<hr>
+
 <b>Point_Diversity.R</b><br><br>
 This script requires two csv files: <i>geog_data.csv</i> and <i>point_data.csv</i>. The former csv file contains a row for every administrative unit under consideration (e.g., counties, states), with the first column consisting of unique administrative unit IDs. If the data under consideration come from the United States, I recommend using county/state FIPS codes in this column. Each succeeing column represents a geographic zone of interest, where values represent the area of the zone represented within each county. Area can be represented in any spatial unit. <i>point_data.csv</i> also begins with a column of administrative unit IDs. Every ID in <i>point_data.csv</i> should be present in <i>geog_data.csv</i> (i.e., there must be a way to tie every artifact observation to a geographic zones). Each subsequent column consists of an artifact class, with counts of that class within each administrative unit. Ensure that these two csv files are in your working directory before running the script. For the examples presented by Boulanger et al. at the 2019 SAA meetings, please contact Matt Boulanger (mboulanger@smu.edu) for the appropriate csv tables.<br><br>
 
