@@ -1,5 +1,5 @@
 # Artifact Class Diversity
-This project contains R (www.r-project.org) and Stan (www.mc-stan.org) scripts that estimate artifact class diversity in multiple geographic regions.<br>
+This project contains R (www.r-project.org) and Stan (www.mc-stan.org) scripts that estimate artifact class diversity in multiple geographic regions.<br><br>
 
 <hr>
 
@@ -17,7 +17,8 @@ There are several script parameters that the user might wish to adjust depending
 <i>Point_Diversity.R</i> produces two classes of <i>RData</i> files. The first of these is <i>Output_and_Diagnostics.RData</i>. This <i>RData</i> file contains the compiled Stan model (<i>Stan.model</i>), a randomly sampled example fit for one of the dataset permutations (<i>Sample_model</i>), a summary of posterior parameters for this example (<i>Stan.model.diagnostics</i>), posterior samples from this example (<i>Stan.model.samples</i>), a list of matrixes for every dataset permutation (<i>sim_point_dstrs</i>), a summary of every dataset permutation by geographic zone (<i>datasets_summary</i>), and aggregated posterior diversity samples across all model fits (<i>Post_Div_Samples</i>). Also included in this file is a dataframe object named <i>model_diagnostics</i>. This contains a summary of convergence diagnostics for every model fit, including the maximum Rhat value, minimum effective sample size (as a percentage of the total sampling iterations), maximum treedepth, number of divergences, number of parameters with Rhat values above 1.01, number of parameters with effective sample sizes below 10% of the total sample iterations, and the number of parameters with sampling that exceeded maximum treedepth. The final column of this dataframe flags any fits with potential convergence issues with 1. For models with sparse observations (see two paragraphs up), minimum effective samples may fall below 10%, but the model has still converged. In these cases, check the other diagnostics to ensure convergence, and examine trace plots from several of the model fits.<br><br>
 
 The second class of <i>RData</i> files produced by <i>Point_Diversity.R</i> consists of aggregated model fits (<i>Mdls_XXXX.RData</i>). These are separated from <i>Output_and_Diagnostics.RData</i> because they use a lot of memory, and in the case of many dataset permutations, may not load into an R session on a personal machine. One file is created per 100 model fits. To inspect convergence diagnostics for a specific dataset permutation fit, load the appropriate <i>Mdls_XXXX.RData</i> file into an R session.<br><br>
-</body>
+
+<hr>
 
 <b>Plotting_Code.R</b><br><br>
 This script requires that <i>Output_and_Diagnostics.RData</i> is located in your working directory. Execute <i>Point_Diversity.R</i> to generate this file.<br><br>
