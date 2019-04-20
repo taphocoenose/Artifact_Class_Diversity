@@ -1,6 +1,6 @@
 // This model estimates parameters for the categorical
 // distribution of artifact classes across multiple
-// regions, based on artifact coutn data.
+// regions, based on artifact count data.
 
 data{
    // Number of geographic zones
