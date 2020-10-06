@@ -1,5 +1,5 @@
 #   Ryan Breslawski, rbreslawski@smu.edu
-#   April 9, 2019
+#   October 5, 2020
 #   
 # Four plots are created: (1) densities
 # for the diversity values of each geographic
@@ -8,7 +8,7 @@
 # aggregated across all dataset permutations,
 # (3) a multinomial posterior sampled from
 # one of the dataset permutations, and (4)
-# scree plots for the proportions of artifact
+# plots for the proportions of artifact
 # class, by region.
 # 
 # Output_and_Diagnostics.RData required
@@ -339,16 +339,19 @@ plot_permutations <- ggplot(bds, aes(x=x, ymax=PlotDens))+
 # Display plot
 plot(plot_permutations)
 
+# Save PDF of plot
+ggsave("01-permutations.pdf", width=8, height=5, units="in")
+
 
 
 ####[[[[[[___ _ _ _ . . .   PLOT 2   . . . _ _ _ ___]]]]]]####
 ##############################################################
 
 # Thin diversity samples for plotting
-PostThin <- Post_Div_Samples[seq(20, nrow(Post_Div_Samples), 20),]
+PostThin <- Post_Div_Samples[seq(500, nrow(Post_Div_Samples), 500),]
 # Set y-axis position for plotting
 PostThin$y <- sapply(PostThin$Geog_Zone, function(x){
-  which(Geog_Zones==x)-1 + rbeta(1, 5, 5)
+  which(Geog_Zones==x)-0.8 + rbeta(1, 5, 5)*0.6
 })
 
 
@@ -371,15 +374,12 @@ plot_aggregated <- ggplot(PostThin, aes(x=x, y=y))+
   annotate("segment", x=-Inf, xend=Inf,  color="white",
            y=seq(0, length(Geog_Zones), 1),
            yend=seq(0, length(Geog_Zones), 1))+
-  geom_point(aes(color=Geog_Zone), alpha=0.05)+
+  geom_point(aes(color=Geog_Zone), alpha=0.2)+
   annotate("segment", x=sample_stats$l, xend=sample_stats$u,
-           y=sample_stats$y, yend=sample_stats$y,
-           color="white", size=0.5)+
+           y=sample_stats$y, yend=sample_stats$y, size=0.5)+
   annotate("segment", x=sample_stats$l2, xend=sample_stats$u2,
-           y=sample_stats$y, yend=sample_stats$y,
-           color="white", size=1.25)+
-  annotate("point", x=sample_stats$med, y=sample_stats$y, 
-           color="white", size=2.25)+
+           y=sample_stats$y, yend=sample_stats$y, size=1.25)+
+  annotate("point", x=sample_stats$med, y=sample_stats$y, size=2.25)+
   labs(x=plotdivex)+
   scale_y_continuous(expand=c(0.01,0.01), 
                      labels=ax_lab_break(Geog_ZonesF),
@@ -414,6 +414,10 @@ plot_aggregated <- ggplot(PostThin, aes(x=x, y=y))+
 
 # Display plot
 plot(plot_aggregated)
+
+# Save PDF of plot
+ggsave("02-aggregated-samples.pdf", height=5, 
+       width=2.5*(length(Geog_Zones)/2), units="in")
 
 
 ####[[[[[[___ _ _ _ . . .   PLOT 3   . . . _ _ _ ___]]]]]]####
@@ -512,7 +516,7 @@ for(j in 1:length(Geog_Zones)){
                yend=c(seq(0, 1, 0.25), 1.1, 1.4), 
                x=c(rep(i*1.002, 5), rep(i*1.006, 2)), 
                xend=rep(i*1.016, 7), color="grey")+
-      annotate("text", x=i*1.11, y=1.25, angle=270, vjust=0,
+      annotate("text", x=i*1.08, y=1.25, angle=270, vjust=0,
                label=plotdiv, parse=TRUE)+
       annotate("text", x=i*1.11, y=0.5, angle=270, vjust=0,
                label="Point class proportion")+
@@ -534,7 +538,7 @@ for(j in 1:length(Geog_Zones)){
                x=c(rep(-0.002*i, 5), rep(-0.006*i, 2)), 
                xend=rep(-0.016*i, 7), 
                color="grey")+
-      annotate("text", x=-0.11*i, y=1.25, angle=90, vjust=0,
+      annotate("text", x=-0.08*i, y=1.25, angle=90, vjust=0,
                label=plotdiv, parse=TRUE)+
       annotate("text", x=-0.11*i, y=0.5, angle=90, vjust=0,
                label="Point class proportion")+
@@ -564,6 +568,10 @@ plot_multinomial <- plot_multinomial + plot_layout(ncol=2)
 # Display plot
 plot(plot_multinomial)
 
+# Save PDF of plot
+ggsave("03-example-permutation.pdf", width=10, 
+       height=4*(length(Geog_Zones)/2), units="in")
+
 
 ####[[[[[[___ _ _ _ . . .   PLOT 4   . . . _ _ _ ___]]]]]]####
 ##############################################################
@@ -573,7 +581,6 @@ plot(plot_multinomial)
 zone_list <- lapply(Geog_Zones, function(x){
   
   x1 <- class_probs_by_zone[,which(colnames(class_probs_by_zone)==x)]
-  sorted <- sapply(x1, function(y) which(sort(x1)==y))
   
   z <- which(Geog_Zones==x)
   
@@ -590,7 +597,7 @@ zone_list <- lapply(Geog_Zones, function(x){
     })
     
     dfu <- data.frame(class=rep(pt_names[y], length(l)),
-                      x=rep(sorted[y], length(l)),
+                      x=rep(y, length(l)),
                       interval=c("x95", "x80", "x65", "x50",
                                  "x35", "x20", "x05"),
                       lower=l1, upper=u1, stringsAsFactors=FALSE)
@@ -612,7 +619,7 @@ m_plot_list <- lapply(1:length(zone_list), function(x){
   
   medy <- class_probs_by_zone[,which(colnames(class_probs_by_zone)==
                                                 Geog_Zones[x])]
-  medx <- sapply(medy, function(y) which(sort(medy)==y))
+  medx <- 1:length(medy)
   
   
   p <- ggplot(xdf, aes(x=x, ymin=lower, ymax=upper))+
@@ -638,4 +645,8 @@ prop_plot <- prop_plot + plot_layout(ncol=2)
 
 # Display plot
 plot(prop_plot)
+
+# Save PDF of plot
+ggsave("04-scree.pdf", width=8, height=2.5*(length(Geog_Zones)/2), 
+       units="in")
   
